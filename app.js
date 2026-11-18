@@ -50,6 +50,8 @@
 
   var S = {
     token: sessionStorage.getItem("fieldglass.token") || null,
+    samples: null,
+    samplesReady: null,
     image: null,        // data URL of the framed photo
     reading: null,
     notes: [],
@@ -249,14 +251,21 @@
      live call. */
 
   function loadSamples() {
-    return fetch("docs/samples.json").then(function (r) {
+    S.samplesReady = fetch("docs/samples.json").then(function (r) {
       return r.ok ? r.json() : {};
     }).then(function (d) {
       S.samples = d && typeof d === "object" ? d : {};
-    }).catch(function () { S.samples = {}; });
+      return S.samples;
+    }).catch(function () { S.samples = {}; return S.samples; });
+    return S.samplesReady;
   }
 
   function showSample(name) {
+    var ready = S.samplesReady || loadSamples();
+    return ready.then(function () { showLoadedSample(name); });
+  }
+
+  function showLoadedSample(name) {
     var s = S.samples && S.samples[name];
     if (!s || !s.text) { status("That cached sample did not load.", "err"); return; }
     var out = F.read(s.text);
@@ -285,24 +294,31 @@
   }
 
   function acceptImage(src) {
-    var img = new Image();
-    img.onload = function () {
-      var f = frame(img);
-      S.image = f.url;
-      S.reading = null;
-      S.answer = null;
-      S.notes = [];
-      S.raw = null;
-      S.cached = false;
-      $("#shot").src = f.url;
-      $("#stagePh").style.display = "none";
-      $("#shotWrap").classList.add("on");
-      $("#readBtn").disabled = false;
-      status("Frame ready, " + f.width + " by " + f.height + " pixels. Press Read the photo.", "");
-      render();
-    };
-    img.onerror = function () { status("That file could not be read as an image.", "err"); };
-    img.src = src;
+    return new Promise(function (resolve) {
+      var img = new Image();
+      img.onload = function () {
+        var f = frame(img);
+        S.image = f.url;
+        S.reading = null;
+        S.answer = null;
+        S.notes = [];
+        S.raw = null;
+        S.cached = false;
+        $("#shot").src = f.url;
+        $("#stagePh").style.display = "none";
+        $("#shotWrap").classList.add("on");
+        $("#readBtn").disabled = false;
+        $("#frameinfo").textContent = f.width + " x " + f.height;
+        status("Frame ready, " + f.width + " by " + f.height + " pixels. Press Read the photo.", "");
+        render();
+        resolve(f);
+      };
+      img.onerror = function () {
+        status("That file could not be read as an image.", "err");
+        resolve(null);
+      };
+      img.src = src;
+    });
   }
 
   function startCamera() {
@@ -468,11 +484,10 @@
       var b = e.target.closest("button[data-sample]");
       if (!b) return;
       var name = b.getAttribute("data-sample");
-      acceptImage("docs/examples/" + name + ".jpg");
-      var wait = setInterval(function () {
-        if (S.image) { clearInterval(wait); showSample(name); }
-      }, 60);
-      setTimeout(function () { clearInterval(wait); }, 4000);
+      Promise.all([S.samplesReady || loadSamples(),
+                   acceptImage("docs/examples/" + name + ".jpg")]).then(function () {
+        showLoadedSample(name);
+      });
     });
 
     render();
