@@ -153,18 +153,19 @@
 
   /* ------------------------------------------------------------------ model */
 
-  function call(messages, maxTokens) {
+  function call(messages, maxTokens, jsonMode) {
     if (!S.token) return Promise.reject(new Error("Sign in, or paste your own key first."));
     S.calls += 1;
+    var body = {
+      model: MODEL,
+      messages: messages,
+      max_tokens: maxTokens
+    };
+    if (jsonMode !== false) body.response_format = { type: "json_object" };
     return fetch(CFG.chatEndpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: "Bearer " + S.token },
-      body: JSON.stringify({
-        model: MODEL,
-        messages: messages,
-        max_tokens: maxTokens,
-        response_format: { type: "json_object" }
-      })
+      body: JSON.stringify(body)
     }).then(function (r) {
       return r.text().then(function (t) {
         var d;
@@ -228,7 +229,7 @@
                                         : "The photograph. Question: " + q },
         { type: "image_url", image_url: { url: S.image } }
       ] }
-    ], 400).then(function (res) {
+    ], 400, false).then(function (res) {
       S.answer = { q: q, text: res.text.replace(/```/g, "").trim() };
       status("", "");
       render();
