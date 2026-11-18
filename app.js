@@ -156,7 +156,7 @@
   /* ------------------------------------------------------------------ model */
 
   function call(messages, maxTokens, jsonMode) {
-    if (!S.token) return Promise.reject(new Error("Sign in, or paste your own key first."));
+    if (!S.token) return Promise.reject(new Error("Sign in with Pollinations first."));
     S.calls += 1;
     var body = {
       model: MODEL,
@@ -435,15 +435,6 @@
         return;
       }
       signIn();
-    });
-    $("#keyBtn").addEventListener("click", function () {
-      var v = $("#keyInput").value.trim();
-      if (v.indexOf("sk_") !== 0) { status("That is not a secret key. Keys start with sk_.", "err"); return; }
-      S.token = v;
-      sessionStorage.setItem("fieldglass.token", v);
-      $("#keyInput").value = "";
-      loadUser();
-      status("Key loaded for this tab. Your own Pollen pays for the calls.", "ok");
     });
     $("#camBtn").addEventListener("click", function () {
       if ($("#camWrap").classList.contains("on")) { stopCamera(); status("Camera off.", ""); return; }

@@ -101,6 +101,12 @@
   .fine{font-size:11.5px;color:var(--faint);margin-top:9px}
   footer{border-top:1px solid var(--rule);margin-top:14px;padding:11px 0 16px;color:var(--dim);font-size:12px}
   footer img{height:19px;vertical-align:-4px}
+  .calls{margin-top:12px;border:1px solid var(--rule);border-radius:6px;background:var(--card);padding:10px 13px}
+  .calls summary{cursor:pointer;list-style:none}
+  .calls summary::-webkit-details-marker{display:none}
+  .calls summary::before{content:"+ ";color:var(--green)}
+  .calls[open] summary::before{content:"- "}
+  .calls .raw{max-height:none;margin-top:9px}
   @media (max-width:1000px){.stage video,.stage img{max-height:40vh}}
 </style>
 </head>
@@ -166,13 +172,9 @@
             <button id="exportBtn" class="btn-ghost" disabled>Copy as Markdown</button>
           </div>
 
-          <div class="keyrow">
-            <input id="keyInput" type="password" placeholder="or paste your own sk_ key for this tab" autocomplete="off">
-            <button id="keyBtn" class="btn-ghost">Use this key</button>
-          </div>
-
-          <p class="fine">The photo is sent to <span class="mono">gen.pollinations.ai</span> as a
-            downscaled frame, and the key stays in this tab. No account data is stored anywhere.</p>
+          <p class="fine">Sign in with your Pollinations account. The photo is sent to
+            <span class="mono">gen.pollinations.ai</span> as a downscaled frame and the token stays in this
+            tab. No account data is stored anywhere.</p>
         </div>
       </section>
 
@@ -208,6 +210,33 @@
         an app that explains what the camera sees. Vision, text and image models come from
         <a href="https://gen.pollinations.ai/models">one API</a>.</span>
     </footer>
+
+    <details class="calls" open>
+      <summary class="micro">How this app calls Pollinations</summary>
+      <p class="fine">Every reading is one <span class="mono">POST https://gen.pollinations.ai/v1/chat/completions</span>
+        with the downscaled frame attached, authorised by the visitor's own Pollinations sign-in
+        (OAuth code flow with PKCE, so the token never leaves the browser and there is no key to paste).
+        The model is <span class="mono">openai/gpt-5.4-nano</span>, which the model list serves with
+        <span class="mono">paid_only: false</span> and image input, so one reading costs a fraction of a Pollen
+        from the visitor's own balance.</p>
+      <pre class="raw">POST https://gen.pollinations.ai/v1/chat/completions
+Authorization: Bearer &lt;the visitor's Pollinations token&gt;
+
+{
+  "model": "openai/gpt-5.4-nano",
+  "response_format": { "type": "json_object" },
+  "max_tokens": 1200,
+  "messages": [
+    { "role": "system", "content": "&lt;the field-observer reading rules&gt;" },
+    { "role": "user", "content": [
+      { "type": "text", "text": "What can be learned from this photograph?" },
+      { "type": "image_url", "image_url": { "url": "data:image/jpeg;base64,&lt;the framed photo&gt;" } }
+    ] }
+  ]
+}</pre>
+      <p class="fine">Source: <a href="https://github.com/Sugamdeol/fieldglass/blob/main/app.js">app.js</a>
+        (<span class="mono">CFG.chatEndpoint</span>, <span class="mono">MODEL</span>, the <span class="mono">call()</span> function).</p>
+    </details>
   </main>
 </div>
 

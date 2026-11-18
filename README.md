@@ -40,12 +40,36 @@ pavement) if you have nothing in front of you.
 
 ## Your own Pollen pays
 
-Sign in with Pollinations (OAuth code flow with PKCE, public app key `pk_KrLm3z0waGtTf7FN`),
-or paste your own `sk_` key with **Use this key**. The key lives in this tab's
-`sessionStorage`, is sent to `gen.pollinations.ai` and nowhere else. There is no server of
-ours and no shared key. One reading is one chat completion on `openai/gpt-5.4-nano` with the
-frame attached and about 1.2k output tokens allowed, which is a fraction of a Pollen; a
-follow-up question is a few hundred tokens.
+Sign in with Pollinations (OAuth code flow with PKCE, public app key `pk_KrLm3z0waGtTf7FN`) and your own
+Pollen pays for every reading. There is no key to paste and no server of ours: the access token lives in
+this tab's `sessionStorage`, is sent to `gen.pollinations.ai` and nowhere else. One reading is one chat
+completion on `openai/gpt-5.4-nano` with the frame attached and about 1.2k output tokens allowed, which is
+a fraction of a Pollen; a follow-up question is a few hundred tokens.
+
+The exact call the page makes is shown in the app's own footer ("How this app calls Pollinations") and in
+`app.js` (`CFG.chatEndpoint`, `MODEL`, and the `call()` function):
+
+```
+POST https://gen.pollinations.ai/v1/chat/completions
+Authorization: Bearer <the visitor's Pollinations token>
+Content-Type: application/json
+
+{
+  "model": "openai/gpt-5.4-nano",
+  "response_format": { "type": "json_object" },
+  "max_tokens": 1200,
+  "messages": [
+    { "role": "system", "content": "<the field-observer reading rules>" },
+    { "role": "user", "content": [
+      { "type": "text", "text": "What can be learned from this photograph?" },
+      { "type": "image_url", "image_url": { "url": "data:image/jpeg;base64,<the framed photo>" } }
+    ] }
+  ]
+}
+```
+
+The default model, `openai/gpt-5.4-nano`, is listed by `GET https://gen.pollinations.ai/v1/models` with
+`paid_only: false` and image input, so it works for free users.
 
 ## Run it
 
