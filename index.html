@@ -55,15 +55,17 @@
   .keyrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
   .keyrow input{flex:1;min-width:200px}
   .stage{margin-top:9px;border:1px dashed var(--rule2);border-radius:5px;background:#fbf9f1;
-    min-height:220px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-  .stage video,.stage img{max-width:100%;max-height:56vh;display:block;border-radius:4px}
+    min-height:180px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+  .stage video,.stage img{max-width:100%;max-height:min(46vh,340px);display:block;border-radius:4px}
   #shotWrap{display:none}
-  #shotWrap.on{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:10px}
+  #shotWrap.on{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:8px}
   #camWrap{display:none;padding:10px;flex-direction:column;gap:9px;align-items:center}
   #camWrap.on{display:flex}
-  .ph{color:var(--faint);font-size:13px;padding:34px 18px;text-align:center;max-width:44ch}
-  .examples{margin-top:10px;display:flex;gap:7px;flex-wrap:wrap;align-items:center}
-  .examples button{background:#fff;border:1px solid var(--rule);color:var(--dim);padding:4px 10px;border-radius:999px;font-size:11.5px}
+  .ph{color:var(--faint);font-size:13px;padding:26px 18px;text-align:center;max-width:44ch}
+  .examples{margin-top:9px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  .examples span{display:inline-flex;gap:6px;align-items:center}
+  .examples .cached-label{border-left:1px solid var(--rule2);padding-left:9px;margin-left:3px}
+  .examples button{background:#fff;border:1px solid var(--rule);color:var(--dim);padding:4px 9px;border-radius:999px;font-size:11.5px}
   .examples button:hover{border-color:var(--green);color:var(--green)}
 
   .panel.empty .ph{padding:40px 18px}
@@ -97,9 +99,9 @@
   .status.err{color:var(--rust)}
   .status.ok{color:var(--green)}
   .fine{font-size:11.5px;color:var(--faint);margin-top:9px}
-  footer{border-top:1px solid var(--rule);margin-top:18px;padding:12px 0 22px;color:var(--dim);font-size:12px}
+  footer{border-top:1px solid var(--rule);margin-top:14px;padding:11px 0 16px;color:var(--dim);font-size:12px}
   footer img{height:19px;vertical-align:-4px}
-  @media (max-width:1000px){.stage video,.stage img{max-height:44vh}}
+  @media (max-width:1000px){.stage video,.stage img{max-height:40vh}}
 </style>
 </head>
 <body>
@@ -108,9 +110,8 @@
     <div class="top">
       <div>
         <h1>Fieldglass</h1>
-        <p class="tag">Point your camera at something and read what a vision model sees: what is
-          visible in the frame, what each observation tells you, and what this one photo cannot show.
-          Ask a follow-up if you want. Your own Pollen pays for the calls; nothing runs on a server of ours.</p>
+        <p class="tag">Point your camera at something and read what a vision model sees: what is visible,
+          what each observation tells you, and what this one photo cannot show. Your own Pollen pays.</p>
       </div>
       <div class="authbox">
         <span id="who" class="who"></span>
@@ -145,19 +146,19 @@
             <div id="shotWrap"><img id="shot" alt="The frame that will be read"></div>
           </div>
 
-          <div class="examples" id="examples">
-            <span class="micro">Or try a sample</span>
-            <button data-src="docs/examples/cliff.jpg">rock face</button>
-            <button data-src="docs/examples/plant.jpg">a leaf</button>
-            <button data-src="docs/examples/street.jpg">brick and pavement</button>
-          </div>
-
-          <div class="examples" id="samples">
-            <span class="micro">See a cached reading</span>
-            <button data-sample="cliff">rock face</button>
-            <button data-sample="plant">a leaf</button>
-            <button data-sample="street">brick and pavement</button>
-            <span class="fine">the real model reply, stored, so the app shows its whole shape without a key</span>
+          <div class="examples">
+            <span class="micro">Sample frame</span>
+            <span id="examples">
+              <button data-src="docs/examples/cliff.jpg">rock face</button>
+              <button data-src="docs/examples/plant.jpg">a leaf</button>
+              <button data-src="docs/examples/street.jpg">brick and pavement</button>
+            </span>
+            <span class="micro cached-label">Cached reading</span>
+            <span id="samples" title="The real model reply for that frame, stored, so the app shows its whole shape without a key">
+              <button data-sample="cliff">rock face</button>
+              <button data-sample="plant">a leaf</button>
+              <button data-sample="street">brick and pavement</button>
+            </span>
           </div>
 
           <div class="controls" style="margin-top:12px">
