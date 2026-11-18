@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fieldglass - point your camera and learn what you see</title>
+<meta name="description" content="Point your camera at something and a Pollinations vision model explains it: what is visible, what it tells you, and what the photo cannot show. You pay with your own Pollen.">
+<style>
+  :root{
+    --paper:#f2efe6; --card:#fffdf7; --ink:#1d2a26; --ink2:#3e4f4a;
+    --dim:#6c7c76; --faint:#96a49f; --rule:#d9d3c3; --rule2:#c3bca6;
+    --green:#0f6b55; --green-soft:#dcefe5; --rust:#a2452b; --blue:#2b5a80;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--paper);color:var(--ink);
+    font-family:ui-sans-serif,-apple-system,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(rgba(29,42,38,.055) 1px,transparent 1px);
+    background-size:20px 20px;
+  }
+  .wrap{max-width:1280px;margin:0 auto;padding:0 20px}
+  a{color:var(--green)}
+  .micro{font-size:10px;letter-spacing:.17em;text-transform:uppercase;color:var(--dim);font-weight:650}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+
+  header{padding:20px 0 14px}
+  .top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap}
+  h1{font-size:27px;margin:0;letter-spacing:-.02em;font-weight:640;font-family:Georgia,"Times New Roman",serif}
+  h1 em{font-style:italic;color:var(--green)}
+  .tag{color:var(--ink2);margin:6px 0 0;max-width:70ch;font-size:13.5px}
+  .authbox{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .who{font-size:11.5px;color:var(--dim);max-width:190px;text-align:right}
+  button{font-family:inherit;font-size:13px;cursor:pointer;border-radius:4px}
+  .btn{background:var(--ink);color:#f6f3e9;border:1px solid var(--ink);padding:9px 16px;font-weight:600}
+  .btn:hover{background:#0d1a17}
+  .btn[disabled]{opacity:.45;cursor:not-allowed}
+  .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--rule2);padding:8px 12px}
+  .btn-ghost:hover{background:#fff;border-color:var(--dim)}
+  .btn-ghost[disabled]{opacity:.4;cursor:not-allowed}
+  input[type=text],input[type=password]{font-family:inherit;font-size:14px;background:#fff;color:var(--ink);
+    border:1px solid var(--rule2);border-radius:4px;padding:9px 11px}
+  input:focus{outline:2px solid var(--green-soft);border-color:var(--green)}
+
+  main{padding:2px 0 40px}
+  .deck{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,.92fr);gap:15px;margin-top:13px;align-items:start}
+  @media (max-width:1000px){.deck{grid-template-columns:1fr}}
+
+  .card{background:var(--card);border:1px solid var(--rule2);border-radius:6px;box-shadow:2px 2px 0 rgba(29,42,38,.06)}
+  .card-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 13px;border-bottom:1px solid var(--rule)}
+  .card-b{padding:13px}
+
+  .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .keyrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .keyrow input{flex:1;min-width:200px}
+  .stage{margin-top:11px;border:1px dashed var(--rule2);border-radius:5px;background:#fbf9f1;
+    min-height:220px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+  .stage video,.stage img{max-width:100%;max-height:56vh;display:block;border-radius:4px}
+  #shotWrap{display:none}
+  #shotWrap.on{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:10px}
+  #camWrap{display:none;padding:10px;flex-direction:column;gap:9px;align-items:center}
+  #camWrap.on{display:flex}
+  .ph{color:var(--faint);font-size:13px;padding:34px 18px;text-align:center;max-width:44ch}
+  .examples{margin-top:10px;display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+  .examples button{background:#fff;border:1px solid var(--rule);color:var(--dim);padding:4px 10px;border-radius:999px;font-size:11.5px}
+  .examples button:hover{border-color:var(--green);color:var(--green)}
+
+  .panel.empty .ph{padding:40px 18px}
+  .head{border-bottom:1px solid var(--rule);padding-bottom:10px;margin-bottom:4px}
+  .subject{margin:0;font-size:17px;font-weight:640;letter-spacing:-.01em}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .chip{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:640;
+    padding:3px 8px;border-radius:999px;border:1px solid var(--rule2);color:var(--dim);background:#fdfcf7}
+  .chip.high{border-color:#9ecfba;color:var(--green);background:var(--green-soft)}
+  .chip.medium{border-color:#dfc99a;color:#8a6a1f;background:#fbf3e2}
+  .chip.low{border-color:#dfae9d;color:var(--rust);background:#fbeae4}
+  .chip.score.good{border-color:#9ecfba;color:var(--green);background:var(--green-soft)}
+  .chip.score.fair{border-color:#dfc99a;color:#8a6a1f;background:#fbf3e2}
+  .chip.score.weak,.chip.score.bad{border-color:#dfae9d;color:var(--rust);background:#fbeae4}
+
+  h3{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+    margin:16px 0 7px;font-weight:650}
+  .marks{margin:0}
+  .marks dt{font-weight:620;font-size:13.5px;margin-top:9px}
+  .marks dd{margin:2px 0 0;color:var(--ink2);font-size:13.5px}
+  .body{margin:0;color:var(--ink2);font-size:13.5px}
+  .uncertain{color:var(--rust)}
+  .notes{margin:0;padding-left:17px;color:var(--rust);font-size:12.5px}
+  .notes li{margin:3px 0}
+  .q{margin:0 0 5px;font-style:italic;color:var(--ink2);font-size:13.5px}
+  .raw{background:#fbf9f1;border:1px solid var(--rule);border-radius:4px;padding:10px;
+    font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;color:var(--dim);
+    white-space:pre-wrap;max-height:240px;overflow:auto;margin:10px 0 0}
+  .status{font-size:12.5px;color:var(--dim);min-height:19px;margin-top:9px}
+  .status.err{color:var(--rust)}
+  .status.ok{color:var(--green)}
+  .fine{font-size:11.5px;color:var(--faint);margin-top:12px}
+  footer{border-top:1px solid var(--rule);margin-top:24px;padding:14px 0 34px;color:var(--dim);font-size:12px}
+  footer img{height:19px;vertical-align:-4px}
+  @media (max-width:1000px){.stage video,.stage img{max-height:44vh}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="top">
+      <div>
+        <h1>Fieldglass</h1>
+        <p class="tag">Point your camera at something and read what a vision model sees: what is
+          visible in the frame, what each observation tells you, and what this one photo cannot show.
+          Ask a follow-up if you want. Your own Pollen pays for the calls; nothing runs on a server of ours.</p>
+      </div>
+      <div class="authbox">
+        <span id="who" class="who"></span>
+        <button id="signBtn" class="btn">Sign in with Pollen</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="deck">
+      <section class="card">
+        <div class="card-h">
+          <span class="micro">The frame</span>
+          <span class="micro mono" id="frameinfo"></span>
+        </div>
+        <div class="card-b">
+          <div class="controls">
+            <button id="camBtn" class="btn-ghost">Start camera</button>
+            <button id="shotBtn" class="btn-ghost">Capture</button>
+            <label class="btn-ghost" for="file" style="display:inline-block">Choose a photo</label>
+            <input id="file" type="file" accept="image/*" style="display:none">
+            <button id="clearBtn" class="btn-ghost">Clear</button>
+          </div>
+
+          <div class="stage">
+            <p class="ph" id="stagePh">No frame yet. Start the camera, capture, or choose a photo from
+              your device. A picture of a place, a plant, a building or a texture all work.</p>
+            <div id="camWrap">
+              <video id="cam" playsinline muted></video>
+              <span class="micro">Point at the subject, then press Capture</span>
+            </div>
+            <div id="shotWrap"><img id="shot" alt="The frame that will be read"></div>
+          </div>
+
+          <div class="examples" id="examples">
+            <span class="micro">Or try a sample</span>
+            <button data-src="docs/examples/cliff.jpg">rock face</button>
+            <button data-src="docs/examples/plant.jpg">a leaf</button>
+            <button data-src="docs/examples/street.jpg">brick and pavement</button>
+          </div>
+
+          <div class="controls" style="margin-top:12px">
+            <button id="readBtn" class="btn" disabled>Read the photo</button>
+            <button id="exportBtn" class="btn-ghost" disabled>Copy as Markdown</button>
+          </div>
+
+          <div class="keyrow">
+            <input id="keyInput" type="password" placeholder="or paste your own sk_ key for this tab" autocomplete="off">
+            <button id="keyBtn" class="btn-ghost">Use this key</button>
+          </div>
+
+          <p class="fine">The photo is sent to <span class="mono">gen.pollinations.ai</span> as a
+            downscaled frame, and the key stays in this tab. No account data is stored anywhere.</p>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-h">
+          <span class="micro">The reading</span>
+          <span class="micro mono" id="modelinfo">openai/gpt-5.4-nano</span>
+        </div>
+        <div class="card-b">
+          <div id="panel" class="panel empty">
+            <p class="ph">No reading yet. Take or choose a photo, then press Read the photo.</p>
+          </div>
+
+          <h3>Ask about this photo</h3>
+          <div class="controls">
+            <input id="question" type="text" style="flex:1;min-width:180px"
+              placeholder="Which way do the beds tilt? What made these marks?">
+            <button id="askBtn" class="btn-ghost">Ask</button>
+          </div>
+
+          <p class="status" id="status"></p>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      <a href="https://pollinations.ai/?ref=badge">
+        <img src="https://raw.githubusercontent.com/pollinations/pollinations/main/packages/ui/src/brand/badge-made-with.svg"
+             alt="Made with pollinations.ai">
+      </a>
+      <span> &middot; Built for Pollinations quest
+        <a href="https://github.com/pollinations/pollinations/issues/20023">#20023</a>,
+        an app that explains what the camera sees. Vision, text and image models come from
+        <a href="https://gen.pollinations.ai/models">one API</a>.</span>
+    </footer>
+  </main>
+</div>
+
+<script src="core.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
