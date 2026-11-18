@@ -1,0 +1,86 @@
+{
+ "cliff": {
+  "text": "{\"subject\":\"Close-up of a red/orange layered rock or mineral surface with wavy banding and striations.\",\"confidence\":\"high\",\"reads\":[{\"mark\":\"Alternating horizontal bands of red and lighter orange\",\"means\":\"Indicates stratification or compositional layering in the material.\"},{\"mark\":\"Wavy, slightly curved band boundaries\",\"means\":\"Suggests the layers were deposited or deformed in a way that produced undulating strata.\"},{\"mark\":\"Fine parallel striations within some bands\",\"means\":\"Points to repeated sedimentary or mineral alignment features, such as erosion markings or internal lamination.\"},{\"mark\":\"Small chips and scuffed patches on the surface\",\"means\":\"Shows the surface has been weathered or mechanically disturbed.\"},{\"mark\":\"Dense texture concentrated along the banding planes\",\"means\":\"Implies the layering planes are visually distinct and may differ in hardness or mineral content.\"}],\"context\":\"The photograph shows an extreme close-up where the primary visible subject is the surface texture and banding of a layered material. Such patterns are commonly seen in sedimentary rocks like sandstones or in mineral banding, where layers differ in composition or cementation. Without scale or additional views, the image mainly supports observations about surface texture and stratification rather than a definitive rock name.\",\"uncertain\":\"This single image cannot determine the exact rock type, the geological formation process, or the location, because no scale, cross-section, or diagnostic features are visible beyond general banded texture.\"}",
+  "usage": {
+   "completion_tokens": 305,
+   "completion_tokens_details": {
+    "accepted_prediction_tokens": 0,
+    "audio_tokens": 0,
+    "reasoning_tokens": 0,
+    "rejected_prediction_tokens": 0
+   },
+   "latency_checkpoint": {
+    "engine_tbt_ms": 9,
+    "engine_ttft_ms": 364,
+    "engine_ttlt_ms": 3066,
+    "pre_inference_ms": 103,
+    "service_tbt_ms": 9,
+    "service_ttft_ms": 714,
+    "service_ttlt_ms": 3410,
+    "user_visible_ttft_ms": 611
+   },
+   "prompt_tokens": 1076,
+   "prompt_tokens_details": {
+    "audio_tokens": 0,
+    "cached_tokens": 0
+   },
+   "total_tokens": 1381
+  }
+ },
+ "plant": {
+  "text": "{\"subject\":\"Close-up photograph of green plant leaves showing veins and soft natural texture.\",\"confidence\":\"high\",\"reads\":[{\"mark\":\"A large green leaf filling most of the image\",\"means\":\"The photo is focused on plant foliage, suggesting interest in leaf form or condition rather than the whole plant.\"},{\"mark\":\"Visible leaf veins running lengthwise\",\"means\":\"The leaves have a typical vascular pattern, and the lighting reveals surface structure.\"},{\"mark\":\"Tiny surface markings and a slightly glossy highlight\",\"means\":\"The leaves appear fresh and are lit in a way that emphasizes texture and moisture or cuticle shine.\"},{\"mark\":\"Another green leaf in the background at the left edge\",\"means\":\"Multiple leaves are present, implying this is part of a larger plant or cluster of foliage.\"},{\"mark\":\"A light-colored, out-of-focus background\",\"means\":\"The shallow depth of field isolates the leaves from their surroundings, likely taken indoors or in controlled lighting.\"}],\"context\":\"The image shows a tight macro-style view of green foliage, where leaf veins and surface texture are clearly rendered. This kind of framing is commonly used to document plant health, growth, or to highlight physical details like vein structure and leaf surface condition. The background is blurred, indicating the camera likely used a narrow depth of field to draw attention to the leaves.\",\"uncertain\":\"This single photo cannot tell which specific plant species it is or whether the leaves have any particular disease or pest issue beyond what is visible on the surface; identifying that would require more of the plant (stem, arrangement of leaves, flowers/fruits) or clearer close-ups of any spots.\"}",
+  "usage": {
+   "completion_tokens": 330,
+   "completion_tokens_details": {
+    "accepted_prediction_tokens": 0,
+    "audio_tokens": 0,
+    "reasoning_tokens": 0,
+    "rejected_prediction_tokens": 0
+   },
+   "latency_checkpoint": {
+    "engine_tbt_ms": 8,
+    "engine_ttft_ms": 264,
+    "engine_ttlt_ms": 2871,
+    "pre_inference_ms": 80,
+    "service_tbt_ms": 8,
+    "service_ttft_ms": 710,
+    "service_ttlt_ms": 3338,
+    "user_visible_ttft_ms": 630
+   },
+   "prompt_tokens": 1076,
+   "prompt_tokens_details": {
+    "audio_tokens": 0,
+    "cached_tokens": 0
+   },
+   "total_tokens": 1406
+  }
+ },
+ "street": {
+  "text": "{\"subject\":\"A brick wall along a paved sidewalk next to a storm drain\",\"confidence\":\"high\",\"reads\":[{\"mark\":\"a long brick wall made of reddish and gray bricks\",\"means\":\"The structure appears to be built from masonry, likely part of a boundary or building facade.\"},{\"mark\":\"a circular metal grate embedded in the pavement near the wall\",\"means\":\"This likely covers a drain or sewer access point for stormwater or wastewater.\"},{\"mark\":\"a concrete curb and narrow strip of grass along the base of the wall\",\"means\":\"There is landscaping between the wall and the paved edge, suggesting designed site maintenance and drainage.\"},{\"mark\":\"a tall lamp post with a sign panel on the sidewalk\",\"means\":\"The area is set up for pedestrian lighting and includes posted information, indicating a maintained public or semi-public walkway.\"}],\"context\":\"The photograph shows a pedestrian path running parallel to a brick masonry wall. The pavement includes a visible drainage grate, and the wall base has a small green strip, indicating attention to runoff and upkeep. A streetlight and sign appear at the edge of the scene, reinforcing that this is a built, walkable outdoor environment rather than an interior area.\",\"uncertain\":\"From this single image, it cannot confirm who owns or where this is, or what the exact drain system is (storm drain vs. another utility) without more views or readable signage.\"}",
+  "usage": {
+   "completion_tokens": 285,
+   "completion_tokens_details": {
+    "accepted_prediction_tokens": 0,
+    "audio_tokens": 0,
+    "reasoning_tokens": 0,
+    "rejected_prediction_tokens": 0
+   },
+   "latency_checkpoint": {
+    "engine_tbt_ms": 8,
+    "engine_ttft_ms": 359,
+    "engine_ttlt_ms": 2559,
+    "pre_inference_ms": 64,
+    "service_tbt_ms": 8,
+    "service_ttft_ms": 666,
+    "service_ttlt_ms": 2862,
+    "user_visible_ttft_ms": 602
+   },
+   "prompt_tokens": 1076,
+   "prompt_tokens_details": {
+    "audio_tokens": 0,
+    "cached_tokens": 0
+   },
+   "total_tokens": 1361
+  }
+ }
+}

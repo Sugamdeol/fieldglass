@@ -241,6 +241,36 @@
     });
   }
 
+  /* --------------------------------------------------- cached sample readings
+     The three sample frames ship with the real reading the model returned for
+     them, so a visitor (and a reviewer) can see the whole app work without a
+     key. They are labelled as cached in the panel and never mixed up with a
+     live call. */
+
+  function loadSamples() {
+    return fetch("docs/samples.json").then(function (r) {
+      return r.ok ? r.json() : {};
+    }).then(function (d) {
+      S.samples = d && typeof d === "object" ? d : {};
+    }).catch(function () { S.samples = {}; });
+  }
+
+  function showSample(name) {
+    var s = S.samples && S.samples[name];
+    if (!s || !s.text) { status("That cached sample did not load.", "err"); return; }
+    var out = F.read(s.text);
+    S.notes = out.notes;
+    S.score = out.score;
+    S.cached = true;
+    S.ms = 0;
+    S.usage = s.usage || {};
+    S.answer = null;
+    S.raw = out.refused ? s.text : null;
+    S.reading = out.refused ? null : out.reading;
+    status("Showing the cached reading the model returned for this frame. Take your own photo to run it live.", "");
+    render();
+  }
+
   /* ---------------------------------------------------------------- capture */
 
   function frame(img) {
@@ -262,6 +292,7 @@
       S.answer = null;
       S.notes = [];
       S.raw = null;
+      S.cached = false;
       $("#shot").src = f.url;
       $("#stagePh").style.display = "none";
       $("#shotWrap").classList.add("on");
@@ -344,6 +375,7 @@
     html += "<div class=\"chips\">";
     html += "<span class=\"chip " + esc(S.reading.confidence) + "\">confidence: " + esc(S.reading.confidence) + "</span>";
     html += "<span class=\"chip score " + esc(g.tone) + "\">" + S.score + "/100 &middot; " + esc(g.label) + "</span>";
+    if (S.cached) html += "<span class=\"chip cached\">cached sample, not a live call</span>";
     if (S.ms) html += "<span class=\"chip\">" + (S.ms / 1000).toFixed(1) + " s</span>";
     if (S.usage && S.usage.total_tokens) html += "<span class=\"chip\">" + S.usage.total_tokens + " tokens</span>";
     html += "</div></div>";
@@ -431,8 +463,19 @@
       var b = e.target.closest("button[data-src]");
       if (b) acceptImage(b.getAttribute("data-src"));
     });
+    $("#samples").addEventListener("click", function (e) {
+      var b = e.target.closest("button[data-sample]");
+      if (!b) return;
+      var name = b.getAttribute("data-sample");
+      acceptImage("docs/examples/" + name + ".jpg");
+      var wait = setInterval(function () {
+        if (S.image) { clearInterval(wait); showSample(name); }
+      }, 60);
+      setTimeout(function () { clearInterval(wait); }, 4000);
+    });
 
     render();
+    loadSamples();
     finishSignIn().then(loadUser);
     var q = new URLSearchParams(window.location.search);
     if (q.get("src")) acceptImage(q.get("src"));

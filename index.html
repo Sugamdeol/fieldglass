@@ -78,6 +78,7 @@
   .chip.score.good{border-color:#9ecfba;color:var(--green);background:var(--green-soft)}
   .chip.score.fair{border-color:#dfc99a;color:#8a6a1f;background:#fbf3e2}
   .chip.score.weak,.chip.score.bad{border-color:#dfae9d;color:var(--rust);background:#fbeae4}
+  .chip.cached{border-color:#b9c0d8;color:var(--blue);background:#eceff8}
 
   h3{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
     margin:16px 0 7px;font-weight:650}
@@ -149,6 +150,14 @@
             <button data-src="docs/examples/cliff.jpg">rock face</button>
             <button data-src="docs/examples/plant.jpg">a leaf</button>
             <button data-src="docs/examples/street.jpg">brick and pavement</button>
+          </div>
+
+          <div class="examples" id="samples">
+            <span class="micro">See a cached reading</span>
+            <button data-sample="cliff">rock face</button>
+            <button data-sample="plant">a leaf</button>
+            <button data-sample="street">brick and pavement</button>
+            <span class="fine">the real model reply, stored, so the app shows its whole shape without a key</span>
           </div>
 
           <div class="controls" style="margin-top:12px">
